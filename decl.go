@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"log"
 	"os"
@@ -89,7 +88,7 @@ func sumTypeDeclSearch(path string) ([]sumTypeDecl, error) {
 	return decls, nil
 }
 
-var reParseSumTypeDecl = regexp.MustCompile(`^//go-sumtype:decl\s+(\S+)\s*$`)
+var reParseSumTypeDecl = regexp.MustCompile(`^//\s*go-sumtype:decl\s+(\S+)\s*$`)
 
 // parseSumTypeDecl parses the type name out of a sum type decl.
 //
@@ -105,6 +104,5 @@ func parseSumTypeDecl(line []byte) string {
 // isSumTypeDecl returns true if and only if this line in a Go source file
 // is a sum type decl.
 func isSumTypeDecl(line []byte) bool {
-	variant1, variant2 := []byte("//go-sumtype:decl "), []byte("//go-sumtype:decl\t")
-	return bytes.HasPrefix(line, variant1) || bytes.HasPrefix(line, variant2)
+	return reParseSumTypeDecl.Match(line)
 }
